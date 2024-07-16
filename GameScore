@@ -1,0 +1,50 @@
+import sys
+
+while True:
+    num_jugadores = int(input("¿Cuántos jugadores hay? "))
+    if num_jugadores <= 0:
+        print("Por favor, ingresa un número positivo.")
+    else:
+        break
+
+puntuacion = {}
+lista_nombres = []
+
+for i in range(num_jugadores):
+    nombre = input(f"Ingresa el nombre del jugador {i + 1}: ")
+    puntuacion[nombre] = 0
+    lista_nombres.append(nombre)
+print(f'{puntuacion}\n')
+
+continua_juego = True
+
+while continua_juego == True:
+    fuera_lista = []
+    fuera = False
+
+    for i in lista_nombres:
+        puntos_obtenidos = int(input(f"Ingrese los puntos obtenidos por {i} en esta ronda: "))
+        puntuacion[i] = puntos_obtenidos + puntuacion[i]
+        if puntuacion[i] >= 101:
+            print(f"El jugador {i} se ha pasado de puntos.")
+            fuera_lista.append(i)
+            fuera = True
+    if len(fuera_lista) == len(lista_nombres) - 1:
+        ganador =  max(value for key, value in puntuacion.items() if value < 101)
+        voittaja = next(key for key, value in puntuacion.items() if value == ganador)
+        print("Tenemos el ganador! El ganador es", voittaja)
+        print(puntuacion)
+        sys.exit(0)
+
+    print(f'{puntuacion}\n')
+
+    if fuera == True:
+        for i in fuera_lista:
+            puntos_max = max(value for key, value in puntuacion.items() if value < 101)
+            puntuacion[i] = puntos_max
+            print(f'{puntuacion}\n')
+
+        continuar = input("¿Deseas continuar el juego? (s/n): ")
+        if continuar != 's':
+            print(puntuacion)
+            continua_juego = False
