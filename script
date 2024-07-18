@@ -1,0 +1,188 @@
+let puntuacion = {};
+    let listaNombres = {};
+
+    function mostrarCamposJugadores() {
+        const numJugadores = document.getElementById('numJugadores').value;
+        if (numJugadores <= 0) {
+            alert('Por favor, ingresa un número positivo.');
+            return;
+        }
+
+        const nombresJugadoresDiv = document.getElementById('nombresJugadores');
+        nombresJugadoresDiv.innerHTML = '';
+
+        for (let i = 0; i < numJugadores; i++) {
+            const nombreInput = document.createElement('input');
+            nombreInput.type = 'text';
+            nombreInput.id = `nombre-${i}`;
+            nombreInput.placeholder = `Nombre del jugador ${i + 1}`;
+            nombresJugadoresDiv.appendChild(nombreInput);
+        }
+
+        document.getElementById('jugadores').style.display = 'block';
+    }
+
+    function crearJugadores() {
+        const numJugadores = document.getElementById('numJugadores').value;
+
+        for (let i = 0; i < numJugadores; i++) {
+            const nombre = document.getElementById(`nombre-${i}`).value;
+            puntuacion[nombre] = 0;
+            listaNombres[nombre] = true;
+        }
+
+        const puntuacionesJugadoresDiv = document.getElementById('puntuacionesJugadores');
+        const puntosRondaDiv = document.getElementById('puntosRonda');
+
+        puntuacionesJugadoresDiv.innerHTML = '';
+        puntosRondaDiv.innerHTML = '';
+
+        for (let nombre in listaNombres) {
+            const jugadorDiv = document.createElement('div');
+            jugadorDiv.id = `jugador-${nombre}`;
+            jugadorDiv.textContent = `Puntuación de ${nombre}: ${puntuacion[nombre]}`;
+            puntuacionesJugadoresDiv.appendChild(jugadorDiv);
+
+            const puntosInput = document.createElement('input');
+            puntosInput.type = 'number';
+            puntosInput.id = `puntos-${nombre}`;
+            puntosInput.placeholder = `Puntos de ${nombre}`;
+            puntosRondaDiv.appendChild(puntosInput);
+        }
+
+        document.getElementById('inputJugadores').style.display = 'none';
+        document.getElementById('jugadores').style.display = 'none';
+        document.getElementById('juego').style.display = 'block';
+        document.getElementById('actualizarPuntosBtn').style.display = 'block';
+    }
+
+    function lanzarConfetti() {
+        const duration = 2 * 1000;
+        const animationEnd = Date.now() + duration;
+        const defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 0 };
+
+        function randomInRange(min, max) {
+            return Math.random() * (max - min) + min;
+        }
+
+        const interval = setInterval(function() {
+            const timeLeft = animationEnd - Date.now();
+
+            if (timeLeft <= 0) {
+                return clearInterval(interval);
+            }
+
+            const particleCount = 50 * (timeLeft / duration);
+            confetti(Object.assign({}, defaults, { particleCount, origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 } }));
+            confetti(Object.assign({}, defaults, { particleCount, origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 } }));
+        }, 250);
+    }
+
+    function actualizarPuntos() {
+        let fueraLista = [];
+        let fuera = false;
+
+        for (let nombre in listaNombres) {
+            const puntosObtenidos = parseInt(document.getElementById(`puntos-${nombre}`).value) || 0;
+            puntuacion[nombre] += puntosObtenidos;
+
+            const jugadorDiv = document.getElementById(`jugador-${nombre}`);
+            jugadorDiv.textContent = `Puntuación de ${nombre}: ${puntuacion[nombre]}`;
+
+            if (puntuacion[nombre] >= 101) {
+                alert(`El jugador ${nombre} se ha pasado de puntos.`);
+                fueraLista.push(nombre);
+                fuera = true;
+            }
+        }
+
+        if (fueraLista.length === Object.keys(listaNombres).length - 1) {
+            let ganador = -1;
+            let voittaja = '';
+
+            for (let nombre in puntuacion) {
+                if (puntuacion[nombre] < 101 && puntuacion[nombre] > ganador) {
+                    ganador = puntuacion[nombre];
+                    voittaja = nombre;
+                }
+            }
+
+            document.getElementById('ganador').style.display = 'block';
+            document.getElementById('ganador').textContent = `¡Tenemos un ganador! El ganador es ${voittaja}.`;
+            document.getElementById('actualizarPuntosBtn').style.display = 'none';
+
+            // Lanzar confetti
+            lanzarConfetti();
+
+            // Mostrar contador de tiempo para reiniciar partida
+            mostrarContadorReinicio();
+
+            return;
+        }
+
+        if (fuera) {
+            for (let nombre of fueraLista) {
+                let puntosMax = -1;
+                for (let n in puntuacion) {
+                    if (puntuacion[n] < 101 && puntuacion[n] > puntosMax) {
+                        puntosMax = puntuacion[n];
+                    }
+                }
+                puntuacion[nombre] = puntosMax;
+                const jugadorDiv = document.getElementById(`jugador-${nombre}`);
+                jugadorDiv.textContent = `Puntuación de ${nombre}: ${puntuacion[nombre]}`;
+            }
+
+            if (!confirm('¿Deseas continuar el juego?')) {
+                document.getElementById('actualizarPuntosBtn').style.display = 'center';
+            }
+        }
+
+        // Limpiar los campos de puntos después de actualizar
+        for (let nombre in listaNombres) {
+            document.getElementById(`puntos-${nombre}`).value = '';
+        }
+    }
+
+    function mostrarContadorReinicio() {
+        const contadorDiv = document.createElement('div');
+        contadorDiv.id = 'contadorReinicio';
+        contadorDiv.textContent = 'La partida se reiniciará en 5 segundos.';
+        document.getElementById('ganador').appendChild(contadorDiv);
+
+        let segundosRestantes = 5;
+        const intervaloContador = setInterval(function() {
+            segundosRestantes--;
+            contadorDiv.textContent = `La partida se reiniciará en ${segundosRestantes} segundos.`;
+
+            if (segundosRestantes === 0) {
+                clearInterval(intervaloContador);
+                reiniciarPartida();
+            }
+        }, 1000);
+    }
+
+    function reiniciarPartida() {
+        // Reiniciar todas las variables y elementos necesarios
+        puntuacion = {};
+        listaNombres = {};
+
+        const puntuacionesJugadoresDiv = document.getElementById('puntuacionesJugadores');
+        puntuacionesJugadoresDiv.innerHTML = '';
+
+        const puntosRondaDiv = document.getElementById('puntosRonda');
+        puntosRondaDiv.innerHTML = '';
+
+        // Eliminar contador de reinicio si existe
+        const contadorDiv = document.getElementById('contadorReinicio');
+        if (contadorDiv) {
+            contadorDiv.parentNode.removeChild(contadorDiv);
+        }
+
+        document.getElementById('ganador').style.display = 'none';
+        document.getElementById('inputJugadores').style.display = 'block';
+        document.getElementById('actualizarPuntosBtn').style.display = 'none';
+
+        // Ocultar el juego si se muestra
+        document.getElementById('juego').style.display = 'none';
+    }
