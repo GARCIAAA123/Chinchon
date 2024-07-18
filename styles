@@ -1,0 +1,74 @@
+body {
+    font-family: Arial, sans-serif;
+    text-align: center;
+    background-color: #006400;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    color: white;
+}
+
+#contenedor {
+    margin: 20px auto;
+    padding: 20px;
+    width: 80%;
+    max-width: 600px;
+    background-color: rgba(0, 0, 0, 0.7);
+    box-shadow: 0 0 10px rgba(0,0,0,0.5);
+    border-radius: 8px;
+}
+
+label {
+    color: white;
+}
+
+input, button {
+    margin: 10px 0;
+    padding: 10px;
+    border-radius: 5px;
+    border: none;
+}
+
+input[type="number"] {
+    -moz-appearance: textfield;
+}
+
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+button {
+    background-color: white;
+    color: black;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: red;
+}
+
+#jugadores {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+#nombresJugadores, #puntuacionesJugadores, #puntosRonda {
+    margin: 10px 0;
+}
+
+.container-imagenes {
+    display: flex;
+    justify-content: center;
+    margin-top: -150px; /* Espacio entre el contenido y las imágenes */
+}
+
+.imagen-izquierda,
+.imagen-derecha { /* Reducir tamaño en un 20% */
+    max-width: 6000px; /* Ancho máximo ajustable según tus necesidades */
+    height: 600px; /* Altura automática para mantener la proporción */
+    margin-right: 75%; /* Espacio entre las imágenes */
+    margin-left: 90%; /* Espacio entre las imágenes */
+}
