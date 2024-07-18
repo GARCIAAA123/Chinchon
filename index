@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chinchón</title>
+    <link rel="icon" type="image/x-icon" href="chinchon-350x300.jpg">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div id="contenedor">
+        <h1>Chinchón</h1>
+        <div id="inputJugadores">
+            <label for="numJugadores">¿Cuántos jugadores hay?</label>
+            <input type="number" id="numJugadores" min="1" required>
+            <button onclick="mostrarCamposJugadores()">Aceptar</button>
+        </div>
+        <div id="jugadores" style="display:none;">
+            <div id="nombresJugadores"></div>
+            <button onclick="crearJugadores()">Iniciar Juego</button>
+        </div>
+        <div id="juego" style="display:none;">
+            <div id="puntuacionesJugadores"></div>
+            <div id="puntosRonda"></div>
+            <button onclick="actualizarPuntos()" style="display:none;" id="actualizarPuntosBtn">Actualizar Puntos</button>
+            <div id="ganador" style="display:none;">
+                <div id="contadorReinicio"></div>
+            </div>
+        </div>
+
+        <div class="container-imagenes">
+            <img src="pngegg.png" alt="Imagen Izquierda" class="imagen-izquierda">
+            <img src="pngegg%20(1).png" alt="Imagen Derecha" class="imagen-derecha">
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
